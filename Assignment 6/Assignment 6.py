@@ -2,12 +2,8 @@ import math
     
 #returns the knn and their labels
 def getNeighbors(indexTracker,labels,cut,data):
-    neighbors=[]
-    neighborLabels=[]
-    for point in indexTracker:
-        if point[0]<=cut:
-            neighbors.append(data[point[1]])
-            neighborLabels.append(labels[point[1]])
+    neighbors=[data[point[1]] for point in indexTracker if point[0]<=cut]
+    neighborLabels=[labels[point[1]]for point in indexTracker if point[0]<=cut]
     return neighbors,neighborLabels
     
 #Returns the final group
@@ -48,22 +44,9 @@ def getLabels():
 
 #Distance of each point
 def getDist(dataList,test):
-    dList=[]
-    indexTracker=[]
-    for index,element in enumerate(dataList):
-        indexTracker.append([round(dist(element,test),2),index])
-        dList.append(round(dist(element,test),2))
+    indexTracker=[[round(dist(element,test),2),index]for index,element in enumerate(dataList)]
+    dList=[round(dist(element,test),2) for index,element in enumerate(dataList)]
     return dList,indexTracker
-
-#sorts the dlist
-def sortDist(dList):
-    sList=sorted(dList)
-    return sList
-
-#gets cutoff value
-def getCut(sList,k):
-    cut=(sList[k-1]+sList[k])/2
-    return cut
 
 
 #Main
@@ -82,8 +65,8 @@ while not end:
     
     #get distance list, sorted list, cutoff value, unpack neighbors and labels
     dList,indexTracker=getDist(data,test)
-    sList=sortDist(dList)
-    cut=getCut(sList,k)
+    sList=sorted(dList)
+    cut=(sList[k-1]+sList[k])/2
     neighbors,neighborLabels=getNeighbors(indexTracker,labels,cut,data)
     
     #print out variables
